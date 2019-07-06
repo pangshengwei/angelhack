@@ -86,10 +86,7 @@ def sentiment_analysis(text):
         url='https://gateway.watsonplatform.net/tone-analyzer/api'
     )
 
-    tone_analysis = tone_analyzer.tone(
-        {'text': text},
-        content_type='application/json'
-    ).get_result()
+    tone_analysis = tone_analyzer.tone({'text': text}, content_type='application/json').get_result()
 
     print(json.dumps(tone_analysis, indent=2))
 
@@ -100,6 +97,22 @@ def google_maps():
 
     return j
 
+def demo():
+    text = '“Hi, my name is Geoffrey Martin. I am located at Nicoll Highway. There has been a tunnel collapse and I see four casualties at the end of the tunnel!'
+    sentiment = sentiment_analysis(text)
+    response = natural_language_understanding.analyze(text=text,features=Features(
+                                                                            entities=EntitiesOptions(emotion=True, sentiment=True, limit=2),
+                                                                            keywords=KeywordsOptions(emotion=True, sentiment=True, limit=2))).get_result()
+    response = json.dumps(response, indent=2)
+    result = {}
+    nlp = json.loads(response)
+    result['incident_no'] = 201907061
+    result['person'] = nlp['entities'][0]['text']
+    result['disaster_type'] = nlp['keywords'][0]['text']
+    result['sentiment'] = 'fear'
+    result['remarks'] = 'I see four casualties'
+    print(result)
+
 class Employees(Resource):
     def get(self):
         return {'employees': [{'id':1, 'name':'Balram'},{'id':2, 'name':'Tom'}]}
@@ -107,4 +120,5 @@ class Employees(Resource):
 api.add_resource(Employees, '/employees')
 
 if __name__ == "__main__":
+    demo()
     app.run()
