@@ -3,9 +3,18 @@ from twilio.twiml.voice_response import Gather, VoiceResponse, Say
 import json
 import os
 import requests
+from ibm_watson import NaturalLanguageUnderstandingV1
+from ibm_watson.natural_language_understanding_v1 \
+import Features, EntitiesOptions, KeywordsOptions
+
+global call_results
 
 app = Flask(__name__)
 
+natural_language_understanding = NaturalLanguageUnderstandingV1(
+    version='2018-11-16',
+    iam_apikey='7bRw7H8zA9Dp4iFRcuZ77yPrw6kpOM-PbUBqV-buDGy7',
+    url='https://gateway.watsonplatform.net/natural-language-understanding/api')
 
 @app.route("/answer", methods=['GET', 'POST'])
 def record():
@@ -51,7 +60,14 @@ def callback():
 
     transcripts = map(lambda res: res['alternatives'][0]['transcript'], results)
 
-    print(''.join(transcripts))
+    call_results = ''.join(transcripts)
+    response = natural_language_understanding.analyze(
+                text=call_results,
+                features=Features(
+                    entities=EntitiesOptions(emotion=True, sentiment=True, limit=2),
+                    keywords=KeywordsOptions(emotion=True, sentiment=True,
+                                             limit=2))).get_result()
+    print(json.dumps(response, indent=2))
 
     return ''.join(transcripts)
 
