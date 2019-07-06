@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { NguiMapModule} from '@ngui/map';
 import * as Chartist from 'chartist';
 
@@ -19,6 +20,12 @@ declare interface TableData {
 export class DashboardComponent implements OnInit{
   public tableData1: TableData;
   public tableData2: TableData;
+  employeeData: JSON;
+  employee:JSON;
+
+    constructor(private httpClient: HttpClient) {
+    }
+
     ngOnInit(){
       this.tableData1 = {
           headerRow: [ 'Incident No.', 'Caller Name', 'Location', 'Lat Long', 'Remarks'],
@@ -121,5 +128,11 @@ export class DashboardComponent implements OnInit{
           labels: ['62%','32%','6%'],
           series: [62, 32, 6]
         });
+        
+        this.httpClient.get('http://127.0.0.1:5000/employees').subscribe(data => {
+          this.employeeData = data as JSON;
+          console.log(this.employeeData);
+          console.log("COCKSUCKER");
+        })
     }
 }

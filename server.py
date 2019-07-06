@@ -8,8 +8,16 @@ from ibm_watson.natural_language_understanding_v1 \
 import Features, EntitiesOptions, KeywordsOptions
 import urllib
 global call_results
+from ibm_watson import SpeechToTextV1
+from flask_cors import CORS, cross_origin
+from flask_restful import Resource, Api
+from json import dumps
+from flask_jsonpify import jsonify
 
 app = Flask(__name__)
+api = Api(app)
+
+CORS(app)
 
 natural_language_understanding = NaturalLanguageUnderstandingV1(
     version='2018-11-16',
@@ -91,6 +99,12 @@ def google_maps():
     j = json.loads(contents.decode("utf-8"))
 
     return j
+
+class Employees(Resource):
+    def get(self):
+        return {'employees': [{'id':1, 'name':'Balram'},{'id':2, 'name':'Tom'}]}
+
+api.add_resource(Employees, '/employees')
 
 if __name__ == "__main__":
     app.run()
