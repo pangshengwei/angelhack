@@ -94,7 +94,10 @@ def google_maps():
     url = 'https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyCBdqIhRDqVhAefF9jDhRhslerC9D-I9xM'
     contents = urllib.request.urlopen(url).read()
     j = json.loads(contents.decode("utf-8"))
-
+    lat = j['results'][0]['geometry']['location']['lat']
+    long = j['results'][0]['geometry']['location']['lng']
+    print(lat)
+    print(long)
     return j
 
 def demo():
