@@ -6,6 +6,7 @@ import * as Chartist from 'chartist';
 
 declare var $:any;
 declare var google: any;
+declare var l: any;
 declare interface TableData {
     headerRow: string[];
     dataRows: string[][];
@@ -21,21 +22,38 @@ export class DashboardComponent implements OnInit{
   public tableData1: TableData;
   public tableData2: TableData;
   employeeData: JSON;
+  eventData: JSON;
   employee:JSON;
 
     constructor(private httpClient: HttpClient) {
+      this.httpClient.get('http://127.0.0.1:5000/event').subscribe(data => {
+        this.eventData = data as any;
+        console.log(this.eventData);
+        console.log(typeof JSON.stringify(this.eventData));
+        console.log(this.tableData1.dataRows);
+        console.log(this.tableData1.dataRows.join(JSON.stringify(this.eventData)));
+
+        let arr = [];
+
+        for(let k in this.eventData) {
+          arr.push(this.eventData[k]);
+        }
+
+        this.tableData1.dataRows.push(arr)
+
+      })
     }
 
     ngOnInit(){
       this.tableData1 = {
-          headerRow: [ 'Incident No.', 'Caller Name', 'Location', 'Lat Long', 'Remarks'],
+          headerRow: [ 'Incident No.', 'Caller Name', 'Location', 'Lat Long', 'Remarks', 'Sentiment'],
           dataRows: [
-              ['201907061', 'Pang Sheng Wei', 'Suntec City', '234556', 'I Suck Cock'],
-              ['201907062', 'Minerva Hooper', 'Curaçao', 'Sinaai-Waas', '$23,789'],
-              ['201907063', 'Sage Rodriguez', 'Netherlands', 'Baileux', '$56,142'],
-              ['201907064', 'Philip Chaney', 'Korea, South', 'Overland Park', '$38,735'],
-              ['201907065', 'Doris Greene', 'Malawi', 'Feldkirchen in Kärnten', '$63,542'],
-              ['201907066', 'Mason Porter', 'Chile', 'Gloucester', '$78,615']
+              ['201907061', 'Pang Sheng Wei', 'Suntec City', '234556', 'I Suck Cock', 'haha'],
+              ['201907062', 'Minerva Hooper', 'Curaçao', 'Sinaai-Waas', '$23,789', 'haha'],
+              ['201907063', 'Sage Rodriguez', 'Netherlands', 'Baileux', '$56,142', 'haha'],
+              ['201907064', 'Philip Chaney', 'Korea, South', 'Overland Park', '$38,735','haha'],
+              ['201907065', 'Doris Greene', 'Malawi', 'Feldkirchen in Kärnten', '$63,542','haha'],
+              ['201907066', 'Mason Porter', 'Chile', 'Gloucester', '$78,615','haha']
           ]
       };
 
@@ -128,11 +146,18 @@ export class DashboardComponent implements OnInit{
           labels: ['62%','32%','6%'],
           series: [62, 32, 6]
         });
-        
+
         this.httpClient.get('http://127.0.0.1:5000/employees').subscribe(data => {
           this.employeeData = data as JSON;
           console.log(this.employeeData);
           console.log("COCKSUCKER");
         })
+
+        // // this.httpClient.get('http://127.0.0.1:5000/event').subscribe(data => {
+        // //   this.eventData = data as JSON;
+        // //   console.log(this.eventData);
+        // //   let l = this.eventData + " ";
+        //
+        // })
     }
 }

@@ -16,7 +16,7 @@ from flask_jsonpify import jsonify
 
 app = Flask(__name__)
 api = Api(app)
-
+result = {}
 CORS(app)
 
 natural_language_understanding = NaturalLanguageUnderstandingV1(
@@ -116,6 +116,7 @@ def demo():
     result['sentiment'] = 'fear'
     result['remarks'] = 'I see four casualties'
     print(result)
+    return result
 
 def getCallData(data):
     callData = {'names': [],
@@ -145,8 +146,14 @@ class Employees(Resource):
     def get(self):
         return {'employees': [{'id':1, 'name':'Balram'},{'id':2, 'name':'Tom'}]}
 
+class Event(Resource):
+    def get(self):
+        print(result)
+        res = [val for key, val in demo().items()]
+        return res
+
 api.add_resource(Employees, '/employees')
+api.add_resource(Event, '/event')
 
 if __name__ == "__main__":
-    demo()
     app.run()
