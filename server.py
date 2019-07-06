@@ -111,6 +111,7 @@ def demo():
     nlp = json.loads(response)
     result['incident_no'] = 201907061
     result['person'] = nlp['entities'][0]['text']
+    result['location'] = nlp['entities'][1]['text']
     result['disaster_type'] = nlp['keywords'][0]['text']
     result['sentiment'] = 'fear'
     result['remarks'] = 'I see four casualties'
