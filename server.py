@@ -3,10 +3,10 @@ from twilio.twiml.voice_response import Gather, VoiceResponse, Say
 import json
 import os
 import requests
-from ibm_watson import NaturalLanguageUnderstandingV1
+from ibm_watson import NaturalLanguageUnderstandingV1, ToneAnalyzerV3
 from ibm_watson.natural_language_understanding_v1 \
 import Features, EntitiesOptions, KeywordsOptions
-
+import urllib
 global call_results
 
 app = Flask(__name__)
@@ -70,6 +70,27 @@ def callback():
     print(json.dumps(response, indent=2))
 
     return ''.join(transcripts)
+
+def sentiment_analysis(text):
+    tone_analyzer = ToneAnalyzerV3(
+        version='2018-09-19',
+        iam_apikey='z4eyiTUomZQHQPbAgQ79ilFlned-Z2fPYNqZ3K2YC9iE',
+        url='https://gateway.watsonplatform.net/tone-analyzer/api'
+    )
+
+    tone_analysis = tone_analyzer.tone(
+        {'text': text},
+        content_type='application/json'
+    ).get_result()
+
+    print(json.dumps(tone_analysis, indent=2))
+
+def google_maps():
+    url = 'https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyCBdqIhRDqVhAefF9jDhRhslerC9D-I9xM'
+    contents = urllib.request.urlopen(url).read()
+    j = json.loads(contents.decode("utf-8"))
+
+    return j
 
 if __name__ == "__main__":
     app.run()
