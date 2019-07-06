@@ -117,6 +117,30 @@ def demo():
     result['remarks'] = 'I see four casualties'
     print(result)
 
+def getCallData(data):
+    callData = {'names': [],
+                'casualties': [],
+                'locations': [],
+                'keywordList': []
+                }
+    for entity in data['entities']:
+        if entity['type'] == "Person":
+            callData["names"].append(entity['text'])
+        elif entity['type'] == "Quantity":
+            callData["casualties"].append(entity['text'])
+        else:
+            callData["locations"].append(entity['text'])
+
+    keywordListTemp = []
+    for keyword in data['keywords']:
+        keywordListTemp.append(keyword['text'])
+
+    keywordListTemp = ''.join(keywordList)
+    keywordListTemp = keywordListTemp.replace('HESITATION ', '')
+    callData['keywordList'] = keywordListTemp
+
+    return callData
+
 class Employees(Resource):
     def get(self):
         return {'employees': [{'id':1, 'name':'Balram'},{'id':2, 'name':'Tom'}]}
