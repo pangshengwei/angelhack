@@ -33,7 +33,7 @@ def record():
     #gather = Gather(input='speech', action='/completed')
     #gather.say('Welcome to Twilio, please tell us why you\'re calling')
     #response.append(gather)
-    response.say('Hello this is Eva, you have reached 995. Please state your name, location and describe your situation after the beep.')
+    response.say('Hello this is Eva, you have reached nine nine five. Please state your name, location and describe your situation after the beep.')
     response.record(action="/recording")
     response.hangup()
 

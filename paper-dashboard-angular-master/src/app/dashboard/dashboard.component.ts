@@ -46,14 +46,13 @@ export class DashboardComponent implements OnInit{
 
     ngOnInit(){
       this.tableData1 = {
-          headerRow: [ 'Incident No.', 'Caller Name', 'Location', 'Lat Long', 'Remarks', 'Sentiment'],
+          headerRow: [ 'Incident No.', 'Caller Name', 'Location', 'Disaster Type', 'Sentiment', 'Remarks'],
           dataRows: [
-              ['201907061', 'Pang Sheng Wei', 'Suntec City', '234556', 'I Suck Cock', 'haha'],
-              ['201907062', 'Minerva Hooper', 'Curaçao', 'Sinaai-Waas', '$23,789', 'haha'],
-              ['201907063', 'Sage Rodriguez', 'Netherlands', 'Baileux', '$56,142', 'haha'],
-              ['201907064', 'Philip Chaney', 'Korea, South', 'Overland Park', '$38,735','haha'],
-              ['201907065', 'Doris Greene', 'Malawi', 'Feldkirchen in Kärnten', '$63,542','haha'],
-              ['201907066', 'Mason Porter', 'Chile', 'Gloucester', '$78,615','haha']
+              ['201907062', 'Minerva Hooper', 'Curaçao',      'Wild Fire',  'Fearful',    'Please help I cant breathe'],
+              ['201907063', 'Sage Rodriguez', 'Netherlands',  'Flood',      'Calm',       'water has entered my house'],
+              ['201907064', 'Philip Chaney',  'Korea, South', 'Earthquake', 'Distressed', 'I see 3 people injured'],
+              ['201907065', 'Doris Greene',   'Malawi',       'Wild Fire',  'Trauma',     'Lots of black smoke'],
+              ['201907066', 'Mason Porter',   'Chile',        'Hurricane',  'Calm',       'strong wind has blown my car']
           ]
       };
 
