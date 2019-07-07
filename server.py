@@ -128,12 +128,9 @@ import operator
 def demo():
 
     global call_results
-    response = natural_language_understanding.analyze(text=call_results,features=Features(
+    data = natural_language_understanding.analyze(text=call_results,features=Features(
                                                                             entities=EntitiesOptions(emotion=True, sentiment=True, limit=2),
                                                                             keywords=KeywordsOptions(emotion=True, sentiment=True, limit=2))).get_result()
-    data = json.dumps(response, indent=2)
-    print("HERE IS DATA")
-    print(data)
     callData = {'incident_no': 201907061, 'name': [], 'location': [], 'disaster_type': [], 'sentiment': None, 'remarks': []}
 
     for entity in data['entities']:
@@ -144,7 +141,7 @@ def demo():
         else:
             callData["location"].append(entity['text'])
 
-    sentiment = sentiment_analysis(call_results)
+    sentiment = -1
 
     if sentiment < 0:
         callData["sentiment"] = "horrified"
@@ -169,7 +166,7 @@ class Employees(Resource):
 class Event(Resource):
     def get(self):
         print(result)
-        res = [val for key, val in demo2().items()]
+        res = [val for key, val in demo().items()]
         return res
 
 api.add_resource(Employees, '/employees')
