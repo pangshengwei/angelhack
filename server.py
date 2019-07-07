@@ -101,7 +101,7 @@ def google_maps():
     return j
 
 def demo():
-    text = '“Hi, my name is Geoffrey Martin. I am located at Nicoll Highway. There has been a tunnel collapse and I see four casualties at the end of the tunnel!'
+    text = 'Hi, my name is Geoffrey Martin. I am located at Nicoll Highway. There has been a tunnel collapse and I see four casualties at the end of the tunnel!'
     sentiment = sentiment_analysis(text)
     response = natural_language_understanding.analyze(text=text,features=Features(
                                                                             entities=EntitiesOptions(emotion=True, sentiment=True, limit=2),
