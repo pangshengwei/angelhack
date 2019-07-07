@@ -46,8 +46,8 @@ def recording():
     print(recording_url)
 
     response = VoiceResponse()
-    response.say("Thanks for the response. This is what you said.")
-    response.play(recording_url)
+    #response.say("Thanks for the response. This is what you said.")
+    #response.play(recording_url)
     response.say("Thank you, our responders have taken note of your call")
 
     return str(response)
@@ -102,11 +102,13 @@ def google_maps():
     print(long)
     return j
 
-def demo():
+def demo2():
+
     global call_results
-    text = '“Hi, my name is Geoffrey Martin. I am located at Nicoll Highway. There has been a tunnel collapse and I see four casualties at the end of the tunnel!'
+
+    text = 'Hi, my name is Geoffrey Martin. I am located at Nicoll Highway. There has been a tunnel collapse and I see four casualties at the end of the tunnel!'
+    sentiment = sentiment_analysis(text)
     call_results = text
-    sentiment = sentiment_analysis(call_results)
     response = natural_language_understanding.analyze(text=call_results,features=Features(
                                                                             entities=EntitiesOptions(emotion=True, sentiment=True, limit=2),
                                                                             keywords=KeywordsOptions(emotion=True, sentiment=True, limit=2))).get_result()
@@ -122,31 +124,42 @@ def demo():
     print(result)
     return result
 
-"""
-def getCallData(data):
-    callData = {'names': [],
-                'casualties': [],
-                'locations': [],
-                'keywordList': []
-                }
+import operator
+def demo():
+
+    global call_results
+    response = natural_language_understanding.analyze(text=call_results,features=Features(
+                                                                            entities=EntitiesOptions(emotion=True, sentiment=True, limit=2),
+                                                                            keywords=KeywordsOptions(emotion=True, sentiment=True, limit=2))).get_result()
+    data = json.dumps(response, indent=2)
+    print("HERE IS DATA")
+    print(data)
+    callData = {'incident_no': 201907061, 'name': [], 'location': [], 'disaster_type': [], 'sentiment': None, 'remarks': []}
+
     for entity in data['entities']:
         if entity['type'] == "Person":
-            callData["names"].append(entity['text'])
+            callData["name"].append(entity['text'])
         elif entity['type'] == "Quantity":
-            callData["casualties"].append(entity['text'])
+            callData["remarks"].append(entity['text'])
         else:
-            callData["locations"].append(entity['text'])
+            callData["location"].append(entity['text'])
 
-    keywordListTemp = []
+    sentiment = sentiment_analysis(call_results)
+
+    if sentiment < 0:
+        callData["sentiment"] = "horrified"
+    else:
+        callData["sentiment"] = "scared"
+
+    keywordList = []
     for keyword in data['keywords']:
-        keywordListTemp.append(keyword['text'])
+        keywordList.append(keyword['text'])
 
-    keywordListTemp = ''.join(keywordList)
-    keywordListTemp = keywordListTemp.replace('HESITATION ', '')
-    callData['keywordList'] = keywordListTemp
+    keywordList = ''.join(keywordList)
+    keywordList = keywordList.replace('HESITATION ', '')
+    callData['remarks'] = keywordList
 
     return callData
-"""
 
 
 class Employees(Resource):
@@ -156,7 +169,7 @@ class Employees(Resource):
 class Event(Resource):
     def get(self):
         print(result)
-        res = [val for key, val in demo().items()]
+        res = [val for key, val in demo2().items()]
         return res
 
 api.add_resource(Employees, '/employees')

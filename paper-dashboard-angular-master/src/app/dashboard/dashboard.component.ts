@@ -52,7 +52,7 @@ export class DashboardComponent implements OnInit{
               ['201907063', 'Sage Rodriguez', 'Netherlands',  'Flood',      'Calm',       'water has entered my house'],
               ['201907064', 'Philip Chaney',  'Korea, South', 'Earthquake', 'Distressed', 'I see 3 people injured'],
               ['201907065', 'Doris Greene',   'Malawi',       'Wild Fire',  'Trauma',     'Lots of black smoke'],
-              ['201907066', 'Mason Porter',   'Chile',        'Hurricane',  'Calm',       'strong wind has blown my car']
+              ['201907066', 'Mason Porter',   'Chile',        'Hurricane',  'Calm',       'strong wind has flipped my car']
           ]
       };
 
