@@ -14,6 +14,8 @@ from flask_restful import Resource, Api
 from json import dumps
 from flask_jsonpify import jsonify
 
+call_results = ''
+
 app = Flask(__name__)
 api = Api(app)
 result = {}
@@ -31,8 +33,8 @@ def record():
     #gather = Gather(input='speech', action='/completed')
     #gather.say('Welcome to Twilio, please tell us why you\'re calling')
     #response.append(gather)
-    response.say('Pang is a cocksucker.\nPress any key when finished.')
-    response.record(maxLength="10", action="/recording")
+    response.say('Hello this is Eva, you have reached 995. Please state your name, location and describe your situation after the beep.')
+    response.record(action="/recording")
     response.hangup()
 
     return str(response)
@@ -46,13 +48,13 @@ def recording():
     response = VoiceResponse()
     response.say("Thanks for the response. This is what you said.")
     response.play(recording_url)
-    response.say("Goodbye and remember that Pang loves BBC.")
+    response.say("Thank you, our responders have taken note of your call")
 
     return str(response)
 
 @app.route("/callback", methods=['POST', 'PUT'])
 def callback():
-
+    global call_results
     add_ons = json.loads(request.values['AddOns'])
 
     if 'ibm_watson_speechtotext' not in add_ons['results']:
@@ -60,8 +62,8 @@ def callback():
 
     payload_url = add_ons["results"]["ibm_watson_speechtotext"]["payload"][0]["url"]
 
-    account_sid = 'AC7a0a2584e4228851c405d7bd74ce9f07'
-    auth_token = '0f34612a29a149fe590aae5235742b41'
+    account_sid = 'AC83a61ef5d6aab46c4146c60d4fffe598'
+    auth_token = '35e4cc8c8e57d80f9df42d8522263caf'
 
     resp = requests.get(payload_url, auth=(account_sid, auth_token)).json()
     results = resp['results'][0]['results']
@@ -101,9 +103,11 @@ def google_maps():
     return j
 
 def demo():
+    global call_results
     text = '“Hi, my name is Geoffrey Martin. I am located at Nicoll Highway. There has been a tunnel collapse and I see four casualties at the end of the tunnel!'
-    sentiment = sentiment_analysis(text)
-    response = natural_language_understanding.analyze(text=text,features=Features(
+    call_results = text
+    sentiment = sentiment_analysis(call_results)
+    response = natural_language_understanding.analyze(text=call_results,features=Features(
                                                                             entities=EntitiesOptions(emotion=True, sentiment=True, limit=2),
                                                                             keywords=KeywordsOptions(emotion=True, sentiment=True, limit=2))).get_result()
     response = json.dumps(response, indent=2)
@@ -118,6 +122,7 @@ def demo():
     print(result)
     return result
 
+"""
 def getCallData(data):
     callData = {'names': [],
                 'casualties': [],
@@ -141,6 +146,8 @@ def getCallData(data):
     callData['keywordList'] = keywordListTemp
 
     return callData
+"""
+
 
 class Employees(Resource):
     def get(self):
