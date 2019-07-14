@@ -24,7 +24,9 @@
     $ cd <directory-that-contains-ngroc>
     $ ./ngrok http 5000
     
-### Other imporant things to configure 
+### Other configurations
 
-    1) Add Ngroc URL to Twilio Add-On Apps - <https://www.twilio.com/console/add-ons>
-    2) Add new IBM API Keys by creating resources - <https://cloud.ibm.com/catalog?search=label:lite&category=ai>
+    1) Add Ngroc URL to Twilio Add-On Apps - https://www.twilio.com/console/add-ons
+    2) Add new IBM API Keys by creating resources - https://cloud.ibm.com/catalog?search=label:lite&category=ai
+    3) Twilio-Flask Tutorial: https://www.twilio.com/docs/voice/tutorials/how-to-respond-to-incoming-phone-calls-python
+    4) Twilio-Flask Tutorial2: https://www.twilio.com/docs/voice/tutorials/how-to-record-phone-calls-python
