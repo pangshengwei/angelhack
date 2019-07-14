@@ -26,5 +26,5 @@
     
 ### Other imporant things to configure 
 
-    1) [Add Ngroc URL to Twilio Add-On Apps](https://www.twilio.com/console/add-ons)
-    2) [Add new IBM API Keys by creating resources]( https://cloud.ibm.com/catalog?search=label:lite&category=ai)
+    1) Add Ngroc URL to Twilio Add-On Apps - <https://www.twilio.com/console/add-ons>
+    2) Add new IBM API Keys by creating resources - <https://cloud.ibm.com/catalog?search=label:lite&category=ai>
