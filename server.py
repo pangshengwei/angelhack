@@ -13,6 +13,8 @@ from flask_cors import CORS, cross_origin
 from flask_restful import Resource, Api
 from json import dumps
 from flask_jsonpify import jsonify
+from ibm_watson import LanguageTranslatorV3
+from twitterscraper import query_tweets
 
 call_results = ''
 
@@ -92,6 +94,24 @@ def sentiment_analysis(text):
 
     print(json.dumps(tone_analysis, indent=2))
 
+
+def translate_to_english(text):
+
+        # detect text
+        language_translator = LanguageTranslatorV3(version='2018-05-01',
+                                                   iam_apikey='taiy3ygYcZgzm_DkpQk1POi6WWnx6RNQ3ubOt3l0PKfJ',
+                                                   url='https://gateway.watsonplatform.net/language-translator/api')
+
+        #models = language_translator.list_models().get_result()
+        #print(json.dumps(models, indent=2))
+        language = language_translator.identify(text).get_result()['languages'][0]['language']
+        print(language)
+        translation = language_translator.translate(text=text, model_id=language+'-en').get_result()
+        return translation['translations'][0]['translation']
+
+
+
+
 def google_maps():
     url = 'https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyCBdqIhRDqVhAefF9jDhRhslerC9D-I9xM'
     contents = urllib.request.urlopen(url).read()
@@ -106,9 +126,11 @@ def demo2():
 
     global call_results
 
-    text = 'Hi, my name is Geoffrey Martin. I am located at Nicoll Highway. There has been a tunnel collapse and I see four casualties at the end of the tunnel!'
-    sentiment = sentiment_analysis(text)
-    call_results = text
+    text = 'Hi, my name is Geoffrey Martin. I am located at Nicoll Highway! There has been a tunnel collapse and I see four casualties at the end of the tunnel!'
+    spanish = 'Hola, mi nombre es Geoffrey Martin. Estoy ubicado en el Empire State Building! ¡Ha habido un colapso del túnel y veo cuatro víctimas al final del túnel!'
+    call_results = translate_to_english(spanish)
+    print(call_results)
+    sentiment = sentiment_analysis(call_results)
     response = natural_language_understanding.analyze(text=call_results,features=Features(
                                                                             entities=EntitiesOptions(emotion=True, sentiment=True, limit=2),
                                                                             keywords=KeywordsOptions(emotion=True, sentiment=True, limit=2))).get_result()
@@ -166,7 +188,7 @@ class Employees(Resource):
 class Event(Resource):
     def get(self):
         print(result)
-        res = [val for key, val in demo().items()]
+        res = [val for key, val in demo2().items()]
         return res
 
 api.add_resource(Employees, '/employees')
