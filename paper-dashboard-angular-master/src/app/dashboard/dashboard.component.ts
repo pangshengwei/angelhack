@@ -7,6 +7,7 @@ import * as Chartist from 'chartist';
 declare var $:any;
 declare var google: any;
 declare var l: any;
+declare var latlong: any;
 declare interface TableData {
     headerRow: string[];
     dataRows: string[][];
@@ -38,11 +39,19 @@ export class DashboardComponent implements OnInit{
         for(let k in this.eventData) {
           arr.push(this.eventData[k]);
         }
+        console.log(arr)
+        let long = arr.slice(-1)[0]
+        let lat = arr.slice(-2)[0]
+        this.latlong = [lat,long]
+        console.log(latlong)
+        arr.splice(6,2)
 
         this.tableData1.dataRows.push(arr)
 
       })
     }
+
+    latlong = this.latlong
 
     ngOnInit(){
       this.tableData1 = {
@@ -149,7 +158,7 @@ export class DashboardComponent implements OnInit{
         this.httpClient.get('http://127.0.0.1:5000/employees').subscribe(data => {
           this.employeeData = data as JSON;
           console.log(this.employeeData);
-          console.log("COCKSUCKER");
+
         })
 
         // // this.httpClient.get('http://127.0.0.1:5000/event').subscribe(data => {

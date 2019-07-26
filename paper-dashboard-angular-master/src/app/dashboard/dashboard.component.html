@@ -109,15 +109,9 @@
                 <div class="header">
                     <h4 class="title">Location Details</h4>
                 </div>
-                <ngui-map zoom="13" center="1.337592, 103.848688" >
-                 <marker [position]="[1.337592, 103.848688]"></marker>
-                   <map-circle
-                       [center]="{lat: 1.337592, lng: -103.848688}">
-                   </map-circle>
-                   <marker [position]="[1.337793, 103.847806]"></marker>
-                     <map-circle
-                         [center]="{lat: 1.337793, lng: -103.847806}">
-                  </map-circle>
+              "{{'[' + latlong + ']' }}"
+                <ngui-map zoom="15" center=  {{latlong}}>
+                 <marker [position]= "[1.3018444, 103.864928]" ></marker>
                </ngui-map>
             </div>
             </div>
@@ -128,7 +122,8 @@
                 <div class="card">
                     <div class="header">
                         <h4 class="title">What Are People Saying?</h4>
-                        <p class="category">Here is a subtitle for this table</p>
+                        <p class="category">Dynamic Auto-Transcription </p>
+                        <p class="category">{{latlong}}</p>
                     </div>
                     <div class="content table-responsive table-full-width">
                         <table class="table table-striped">
@@ -167,53 +162,6 @@
                             <hr>
                             <div class="stats">
                                 <i class="ti-reload"></i> Updated Seconds Ago
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="header">
-                        <h4 class="title">Email Statistics</h4>
-                        <p class="category">Last Campaign Performance</p>
-                    </div>
-                    <div class="content">
-                        <div id="chartPreferences" class="ct-chart ct-perfect-fourth"></div>
-
-                        <div class="footer">
-                            <div class="chart-legend">
-                                <i class="fa fa-circle text-info"></i> Open
-                                <i class="fa fa-circle text-danger"></i> Bounce
-                                <i class="fa fa-circle text-warning"></i> Unsubscribe
-                            </div>
-                            <hr>
-                            <div class="stats">
-                                <i class="ti-timer"></i> Campaign sent 2 days ago
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card ">
-                    <div class="header">
-                        <h4 class="title">2015 Sales</h4>
-                        <p class="category">All products including Taxes</p>
-                    </div>
-                    <div class="content">
-                        <div id="chartActivity" class="ct-chart"></div>
-
-                        <div class="footer">
-                            <div class="chart-legend">
-                                <i class="fa fa-circle text-info"></i> Tesla Model S
-                                <i class="fa fa-circle text-warning"></i> BMW 5 Series
-                            </div>
-                            <hr>
-                            <div class="stats">
-                                <i class="ti-check"></i> Data information certified
                             </div>
                         </div>
                     </div>
