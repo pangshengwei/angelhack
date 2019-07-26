@@ -94,7 +94,6 @@ def sentiment_analysis(text):
 
     print(json.dumps(tone_analysis, indent=2))
 
-
 def translate_to_english(text):
 
         # detect text
@@ -110,17 +109,20 @@ def translate_to_english(text):
         return translation['translations'][0]['translation']
 
 
+def google_maps(address):
+    #teststreet= 'Nicole+Highway,+SG'
+    #teststreet2= 'Nicole+Highway'
 
-
-def google_maps():
-    url = 'https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyCBdqIhRDqVhAefF9jDhRhslerC9D-I9xM'
-    contents = urllib.request.urlopen(url).read()
+    #url = 'https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyCBdqIhRDqVhAefF9jDhRhslerC9D-I9xM'
+    url2 = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address +'&key=AIzaSyCBdqIhRDqVhAefF9jDhRhslerC9D-I9xM'
+    contents = urllib.request.urlopen(url2).read()
     j = json.loads(contents.decode("utf-8"))
     lat = j['results'][0]['geometry']['location']['lat']
     long = j['results'][0]['geometry']['location']['lng']
-    print(lat)
-    print(long)
-    return j
+    #print(lat)
+    #print(long)
+    return (lat,long)
+
 
 def demo2():
 
@@ -187,9 +189,10 @@ class Employees(Resource):
 
 class Event(Resource):
     def get(self):
-        print(result)
         res = [val for key, val in demo2().items()]
-        return res
+        location = res[2].replace(" ", "+")
+        lat, long = google_maps(location)
+        return res + [lat] + [long]
 
 api.add_resource(Employees, '/employees')
 api.add_resource(Event, '/event')
