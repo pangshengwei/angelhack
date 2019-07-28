@@ -15,6 +15,8 @@ from json import dumps
 from flask_jsonpify import jsonify
 from ibm_watson import LanguageTranslatorV3
 from twitterscraper import query_tweets
+from scraper import ReturnCorpus
+from credentials import *
 
 call_results = ''
 
@@ -25,7 +27,7 @@ CORS(app)
 
 natural_language_understanding = NaturalLanguageUnderstandingV1(
     version='2018-11-16',
-    iam_apikey='7bRw7H8zA9Dp4iFRcuZ77yPrw6kpOM-PbUBqV-buDGy7',
+    iam_apikey=natural_language_understanding_api_key,
     url='https://gateway.watsonplatform.net/natural-language-understanding/api')
 
 @app.route("/answer", methods=['GET', 'POST'])
@@ -64,8 +66,8 @@ def callback():
 
     payload_url = add_ons["results"]["ibm_watson_speechtotext"]["payload"][0]["url"]
 
-    account_sid = 'AC83a61ef5d6aab46c4146c60d4fffe598'
-    auth_token = '35e4cc8c8e57d80f9df42d8522263caf'
+    account_sid = twilio_account_sid
+    auth_token = twilio_auth_token
 
     resp = requests.get(payload_url, auth=(account_sid, auth_token)).json()
     results = resp['results'][0]['results']
@@ -86,41 +88,30 @@ def callback():
 def sentiment_analysis(text):
     tone_analyzer = ToneAnalyzerV3(
         version='2018-09-19',
-        iam_apikey='z4eyiTUomZQHQPbAgQ79ilFlned-Z2fPYNqZ3K2YC9iE',
+        iam_apikey=sentiment_analysis_api_key,
         url='https://gateway.watsonplatform.net/tone-analyzer/api'
     )
 
     tone_analysis = tone_analyzer.tone({'text': text}, content_type='application/json').get_result()
 
-    print(json.dumps(tone_analysis, indent=2))
+    return json.dumps(tone_analysis, indent=2)
 
 def translate_to_english(text):
 
         # detect text
-        language_translator = LanguageTranslatorV3(version='2018-05-01',
-                                                   iam_apikey='taiy3ygYcZgzm_DkpQk1POi6WWnx6RNQ3ubOt3l0PKfJ',
-                                                   url='https://gateway.watsonplatform.net/language-translator/api')
-
-        #models = language_translator.list_models().get_result()
-        #print(json.dumps(models, indent=2))
+        language_translator = LanguageTranslatorV3(version='2018-05-01', iam_apikey=language_translator_api_key, url='https://gateway.watsonplatform.net/language-translator/api')
         language = language_translator.identify(text).get_result()['languages'][0]['language']
-        print(language)
         translation = language_translator.translate(text=text, model_id=language+'-en').get_result()
         return translation['translations'][0]['translation']
 
 
 def google_maps(address):
-    #teststreet= 'Nicole+Highway,+SG'
-    #teststreet2= 'Nicole+Highway'
 
-    #url = 'https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyCBdqIhRDqVhAefF9jDhRhslerC9D-I9xM'
-    url2 = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address +'&key=AIzaSyCBdqIhRDqVhAefF9jDhRhslerC9D-I9xM'
-    contents = urllib.request.urlopen(url2).read()
+    url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address +'&key=' + google_maps_api_key
+    contents = urllib.request.urlopen(url).read()
     j = json.loads(contents.decode("utf-8"))
     lat = j['results'][0]['geometry']['location']['lat']
     long = j['results'][0]['geometry']['location']['lng']
-    #print(lat)
-    #print(long)
     return (lat,long)
 
 
@@ -128,7 +119,7 @@ def demo2():
 
     global call_results
 
-    text = 'Hi, my name is Geoffrey Martin. I am located at Nicoll Highway! There has been a tunnel collapse and I see four casualties at the end of the tunnel!'
+    text = 'Hi, my name is Geoffrey Martin. I am located at Empire State Building! There has been a tunnel collapse and I see four casualties at the end of the tunnel!'
     spanish = 'Hola, mi nombre es Geoffrey Martin. Estoy ubicado en el Empire State Building! ¡Ha habido un colapso del túnel y veo cuatro víctimas al final del túnel!'
     call_results = translate_to_english(spanish)
     print(call_results)
@@ -190,9 +181,13 @@ class Employees(Resource):
 class Event(Resource):
     def get(self):
         res = [val for key, val in demo2().items()]
-        location = res[2].replace(" ", "+")
-        lat, long = google_maps(location)
-        return res + [lat] + [long]
+        location = res[2]
+        disaster = res[3]
+        lat, long = google_maps(location.replace(" ", "+"))
+
+        words = ReturnCorpus(location + " " + disaster)
+
+        return res + [lat] + [long] + words
 
 api.add_resource(Employees, '/employees')
 api.add_resource(Event, '/event')

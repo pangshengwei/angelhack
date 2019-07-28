@@ -109,9 +109,9 @@
                 <div class="header">
                     <h4 class="title">Location Details</h4>
                 </div>
-              "{{'[' + latlong + ']' }}"
+
                 <ngui-map zoom="15" center=  {{latlong}}>
-                 <marker [position]= "[1.3018444, 103.864928]" ></marker>
+                 <marker [position]= "[40.7484405,-73.98566439999999]" ></marker>
                </ngui-map>
             </div>
             </div>
@@ -137,6 +137,28 @@
                                     <td *ngFor="let cell of row">{{cell}}</td>
                                 </tr>
                             </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+          </div>
+
+              <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Social Media</h4>
+                        <p class="category">Dynamic Auto-Transcription </p>
+
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th *ngFor="let cell of tableData2.dataRows">{{ cell }}</th>
+                                </tr>
+                            </thead>
                         </table>
 
                     </div>

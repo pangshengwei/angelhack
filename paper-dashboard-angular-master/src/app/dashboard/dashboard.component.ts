@@ -13,6 +13,7 @@ declare interface TableData {
     dataRows: string[][];
 }
 
+
 @Component({
     selector: 'dashboard-cmp',
     moduleId: module.id,
@@ -40,12 +41,16 @@ export class DashboardComponent implements OnInit{
           arr.push(this.eventData[k]);
         }
         console.log(arr)
-        let long = arr.slice(-1)[0]
-        let lat = arr.slice(-2)[0]
+        let words = arr.slice(8, 17)
+        console.log(words)
+        let long = arr.slice(-11)[0]
+        let lat = arr.slice(-12)[0]
         this.latlong = [lat,long]
-        arr.splice(6,2)
+        arr.splice(6,12)
+
 
         this.tableData1.dataRows.push(arr)
+        this.tableData2.dataRows.push(words)
         console.log("Hello")
         console.log(arr)
 
@@ -64,6 +69,11 @@ export class DashboardComponent implements OnInit{
               ['201907065', 'Doris Greene',   'Malawi',       'Wild Fire',  'Trauma',     'Lots of black smoke'],
               ['201907066', 'Mason Porter',   'Chile',        'Hurricane',  'Calm',       'strong wind has flipped my car']
           ]
+      };
+
+        this.tableData2 = {
+          headerRow: ['1','1','1','1','1','1','1','1','1','1'],
+          dataRows: []
       };
 
         var dataSales = {
